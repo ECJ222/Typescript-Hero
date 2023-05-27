@@ -21,6 +21,7 @@
     "jsx": "react-jsx"
   },
   "include": [
-    "src"
+    "./node_modules/react-scripts/lib/react-app.d.ts",
+    "src",
   ]
 }
