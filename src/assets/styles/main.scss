@@ -1,4 +1,4 @@
-@import url("https://fonts.googleapis.com/css2?family=Montserrat+Alternates:wght@400;500;600&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap");
 
 *,
 *::before,
@@ -6,10 +6,22 @@
   box-sizing: border-box;
   margin: 0;
   padding: 0;
+  -webkit-tap-highlight-color: none;
+}
+
+*::selection {
+  background: none;
+}
+
+html {
+  font-size: 92%;
+
+  @media screen and (min-width: 1024px) {
+    font-size: 100%;
+  }
 }
 
 body {
-  margin: 0;
   font-family: "Montserrat Alternates", sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
@@ -17,6 +29,40 @@ body {
   color: #fff;
 }
 
+body::-webkit-scrollbar {
+  display: none;
+}
+
+#root {
+  height: max-content;
+}
+
 img {
   max-width: 100%;
+}
+
+button {
+  background-color: transparent;
+  border: none;
+  cursor: pointer;
+}
+
+button:focus {
+  outline: none;
+}
+
+html.lenis {
+  height: auto;
+}
+
+.lenis.lenis-smooth {
+  scroll-behavior: auto;
+}
+
+.lenis.lenis-smooth [data-lenis-prevent] {
+  overscroll-behavior: contain;
+}
+
+.lenis.lenis-stopped {
+  overflow: hidden;
 }

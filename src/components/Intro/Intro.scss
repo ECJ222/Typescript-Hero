@@ -1,16 +1,59 @@
 .intro {
-  width: 100vw;
-  height: calc(100vh - 103px);
+  width: 100%;
+  height: calc(100vh - 99px);
   text-align: center;
   position: relative;
+
+  &__cta {
+    position: absolute;
+    top: 45%;
+    left: 50%;
+    transform: translate(-50%, -45%);
+  }
 
   &__text {
     font-size: 2.5rem;
     font-weight: 600;
     margin-bottom: 2rem;
-    position: absolute;
-    top: 35%;
-    left: 50%;
-    transform: translate(-50%, -35%);
+  }
+
+  a {
+    text-decoration: none;
+  }
+
+  &__btn {
+    display: block;
+    font-size: 1.5rem;
+    font-weight: 500;
+    padding: 1rem 2rem;
+    border: 2px solid #fff;
+    border-radius: 50px;
+    background-color: transparent;
+    color: #fff;
+    cursor: pointer;
+    max-width: 175px;
+    transition: all 0.3s ease-in-out;
+    margin: 2rem auto 0;
+
+    &:hover {
+      background-color: #fff;
+      color: #000;
+    }
   }
 }
+
+// .shape-outer {
+//   position: relative;
+//   top: 70%;
+//   z-index: 10;
+//   pointer-events: none;
+// }
+
+// .shape {
+//   height: max-content;
+//   width: 100%;
+//   display: block;
+//   transform-origin: 100% 0;
+//   fill: #000;
+//   will-change: transform;
+// }

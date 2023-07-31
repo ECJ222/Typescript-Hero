@@ -1,9 +1,24 @@
-import Base from "./components/Base/Base";
-import Header from "./components/Header/Header";
-import Intro from "./components/Intro/Intro";
+import { useEffect } from "react";
+import { ReactLenis } from "@studio-freight/react-lenis";
+import Header from "./components/Header";
+import Intro from "./components/Intro";
+import Game from "./Game";
 
 function App() {
-  return <Base Header={Header} Intro={Intro} />;
+  useEffect(() => {
+    // ScrollTrigger.clearScrollMemory();
+    window.history.scrollRestoration = "manual";
+  }, []);
+
+  return (
+    <ReactLenis root>
+      <section className="home">
+        <Header />
+        <Intro />
+      </section>
+      <Game />
+    </ReactLenis>
+  );
 }
 
 export default App;
