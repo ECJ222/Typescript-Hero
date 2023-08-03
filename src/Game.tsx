@@ -27,7 +27,7 @@ const Game = ({ startEndAnimation, resetEndAnimation }: GameType) => {
   const { width, height } = useResize();
   const { isScrolling, handleScroll } = useScroll();
   const imageContext = require.context("./assets/game-image-sequence/", true, /\.png$/);
-  const pagination = 45;
+  const pagination = 35;
 
   const getCurrentFrame = (position: number): string => {
     return `./anim${String(position + 1).padStart(4, "0")}.png`;
