@@ -1,7 +1,7 @@
 import { useState, useRef } from "react";
 import { SpeakerWaveIcon, SpeakerXMarkIcon } from "@heroicons/react/24/solid";
-import Logo from "../../assets/icons/Logo.svg";
-import Audio from "../../assets/audio/Intro.mp3";
+import Logo from "../../assets/icons/logo.svg";
+import Audio from "../../assets/audio/intro.mp3";
 import "./Header.scss";
 
 const Header = () => {
