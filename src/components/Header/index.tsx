@@ -1,9 +1,8 @@
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef } from "react";
 import { SpeakerWaveIcon, SpeakerXMarkIcon } from "@heroicons/react/24/solid";
+import Logo from "../../assets/icons/Logo.svg";
 import Audio from "../../assets/audio/Intro.mp3";
 import "./Header.scss";
-
-const Logo = require("../../assets/icons/Logo.svg");
 
 const Header = () => {
   const [isPlaying, setIsPlaying] = useState(false);
@@ -27,7 +26,7 @@ const Header = () => {
   return (
     <header className="header">
       <nav>
-        <img className="rotate" src={Logo.default} alt="The intro logo" />
+        <img className="rotate" src={Logo} alt="The intro logo" />
 
         <button aria-roledescription={isPlaying ? "play-button" : "pause-button"} onClick={isPlaying ? pauseAudio : playAudio}>
           {!isPlaying ? <SpeakerXMarkIcon fill="#fff" width="26" height="26" /> : <SpeakerWaveIcon fill="#fff" width="26" height="26" />}
