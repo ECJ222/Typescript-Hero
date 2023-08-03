@@ -6,8 +6,8 @@ interface POSITION {
   transform?: string;
 }
 
-const POSITIONX = "10%";
-const POSITIONY = "15px";
+const POSITIONX = "5%";
+const POSITIONY = "5%";
 const POSITION_CENTER = "50%";
 
 export const FRAME_TO_PAUSE = [36, 72, 108, 144, 180, 216, 252, 288, 302];

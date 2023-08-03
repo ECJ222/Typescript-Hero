@@ -5,21 +5,21 @@ export const useScroll = () => {
   // Store the timeout ID
   const scrollTimeout = useRef<NodeJS.Timeout | null>(null);
 
+  const handleScroll = () => {
+    // Clear the timeout if it exists
+    if (scrollTimeout.current) {
+      clearTimeout(scrollTimeout.current);
+    }
+
+    setIsScrolling(true);
+    // Set a new timeout
+    scrollTimeout.current = setTimeout(() => {
+      // After 100ms of no scrolling, setIsScrolling to false
+      setIsScrolling(false);
+    }, 100);
+  };
+
   useEffect(() => {
-    const handleScroll = () => {
-      // Clear the timeout if it exists
-      if (scrollTimeout.current) {
-        clearTimeout(scrollTimeout.current);
-      }
-
-      setIsScrolling(true);
-      // Set a new timeout
-      scrollTimeout.current = setTimeout(() => {
-        // After 100ms of no scrolling, setIsScrolling to false
-        setIsScrolling(false);
-      }, 100);
-    };
-
     // Add event listener
     window.addEventListener("scroll", handleScroll);
     // Remove event listener on cleanup
@@ -32,5 +32,5 @@ export const useScroll = () => {
     };
   }, []);
 
-  return { isScrolling };
+  return { isScrolling, handleScroll };
 };
