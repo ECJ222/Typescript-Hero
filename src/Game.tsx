@@ -3,7 +3,7 @@ import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { Observer } from "gsap/Observer";
 import Lottie from "lottie-react";
-import { useResize, useGsapContext, useScroll } from "./hooks";
+import { useResize, useScroll } from "./hooks";
 import TutorialModal from "./components/TutorialModal/index";
 import { FRAME_TO_PAUSE } from "./components/TutorialModal/constants";
 import SwipeUpAnimation from "./utils/swipeup.json";
@@ -16,7 +16,7 @@ interface GameType {
 
 const Game = ({ startEndAnimation, resetEndAnimation }: GameType) => {
   const frameCount = 360;
-  const [images, setImage] = useState<HTMLImageElement[]>([]);
+  const images = useRef<HTMLImageElement[]>([]);
   const currentIndex = useRef(0);
   const allowScroll = useRef(false);
   const scrollTimeout = useRef<gsap.core.Tween | null>(null);
@@ -27,42 +27,47 @@ const Game = ({ startEndAnimation, resetEndAnimation }: GameType) => {
   const { width, height } = useResize();
   const { isScrolling, handleScroll } = useScroll();
   const imageContext = require.context("./assets/game-image-sequence/", true, /\.png$/);
+  const pagination = 10;
 
   const getCurrentFrame = (position: number): string => {
     return `./anim${String(position + 1).padStart(4, "0")}.png`;
   };
 
-  const setImages = () => {
-    if (images.length < frameCount) {
+  const createImages = () => {
+    if (images.current.length < frameCount) {
       const tempImages: HTMLImageElement[] = [];
-      for (let i = 0; i < frameCount; i++) {
+      for (let i = images.current.length; i < images.current.length + pagination; i++) {
         const img = new Image();
-
         img.src = imageContext(getCurrentFrame(i));
         tempImages.push(img);
       }
 
-      setImage([...images, ...tempImages]);
+      images.current.push(...tempImages);
     }
   };
 
-  const drawImage = useCallback(() => {
-    const image = images[currentIndex.current];
-    const canvas = document.querySelector("canvas") as HTMLCanvasElement;
+  const drawImage = () => {
+    if (images.current[currentIndex.current + pagination]) {
+      const image = images.current[currentIndex.current];
+      console.log(image, currentIndex.current, width, height);
+      const canvas = document.querySelector("canvas") as HTMLCanvasElement;
 
-    canvas.style.width = `100%`;
-    canvas.style.height = `100%`;
+      canvas.style.width = `100%`;
+      canvas.style.height = `100%`;
 
-    const context = canvas.getContext("2d") as CanvasRenderingContext2D;
+      const context = canvas.getContext("2d") as CanvasRenderingContext2D;
 
-    context.canvas.width = width;
-    context.canvas.height = height;
+      context.canvas.width = width;
+      context.canvas.height = height;
 
-    context.clearRect(0, 0, canvas.width, canvas.height);
+      context.clearRect(0, 0, canvas.width, canvas.height);
 
-    // Draw the image on the canvas
-    context.drawImage(image, 0, 0, canvas.width, canvas.height);
-  }, [height, images, width]);
+      // Draw the image on the canvas
+      context.drawImage(image, 0, 0, canvas.width, canvas.height);
+    } else {
+      createImages();
+    }
+  };
 
   const continueGame = () => {
     isScrollable.current = true;
@@ -86,13 +91,9 @@ const Game = ({ startEndAnimation, resetEndAnimation }: GameType) => {
     }
   }, []);
 
-  const setImageLoad = useCallback(() => {
-    images[currentIndex.current].onload = () => drawImage();
-  }, [drawImage, images]);
-
   const goToFrame = (isScrollingDown: boolean) => {
     currentIndex.current = isScrollingDown ? currentIndex.current + 1 : currentIndex.current - 1;
-    const isAtEnd = currentIndex.current === images.length - 1;
+    const isAtEnd = currentIndex.current === images.current.length - 1;
     const isAtBeginning = currentIndex.current === 0;
     if (isAtEnd || isAtBeginning) {
       // resume native scroll
@@ -109,7 +110,7 @@ const Game = ({ startEndAnimation, resetEndAnimation }: GameType) => {
       return;
     }
 
-    if (isAtEnd || currentIndex.current > images.length - 5) {
+    if (isAtEnd || currentIndex.current > images.current.length - 5) {
       if (!isScrollingDown) {
         resetEndAnimation();
       }
@@ -118,7 +119,7 @@ const Game = ({ startEndAnimation, resetEndAnimation }: GameType) => {
     allowScroll.current = false;
     scrollTimeout.current?.restart(true);
 
-    let target = images[currentIndex.current];
+    let target = images.current[currentIndex.current];
     if (target) {
       gsap.to(target, {
         yPercent: isScrollingDown ? -100 : 0,
@@ -135,8 +136,10 @@ const Game = ({ startEndAnimation, resetEndAnimation }: GameType) => {
     }
   };
 
-  setImages();
-  useGsapContext({ callback: setImageLoad });
+  useEffect(() => {
+    createImages();
+    // eslint-disable-next-line
+  }, []);
 
   // Move through frames when - animation timeline is available.
   useEffect(() => {
@@ -195,9 +198,10 @@ const Game = ({ startEndAnimation, resetEndAnimation }: GameType) => {
 
   // In case of resize event - image load
   useEffect(() => {
-    const isImageLoaded = images[currentIndex.current].complete;
+    const image = images.current[currentIndex.current];
 
-    if (isImageLoaded) {
+    if (image) {
+      if (!image.onload) image.onload = () => drawImage();
       drawImage();
       scrollTrigger.current?.refresh();
     }
