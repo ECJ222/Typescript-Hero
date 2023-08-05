@@ -1,8 +1,10 @@
-import { useCallback, useRef } from "react";
+import { useCallback, useEffect, useRef } from "react";
+import hljs from "highlight.js";
+import "highlight.js/styles/github.css";
 import { gsap } from "gsap";
-import { useResize, useGsapContext } from "../../hooks";
+import { useResize } from "../../hooks";
 import { POSITIONS, FRAME_TO_PAUSE } from "./constants";
-import lessons from "../../utils/lessons.json";
+import { LESSONS } from "../../utils/lessons";
 import "./TutorialModal.scss";
 
 interface TutorialModalType {
@@ -12,11 +14,11 @@ interface TutorialModalType {
 
 const TutorialModal = ({ topicIndex, onContinue }: TutorialModalType) => {
   const framePauseIndex: number = FRAME_TO_PAUSE.findIndex((index) => index === topicIndex + 1 || index === topicIndex - 1);
-  const content = Object.entries(lessons);
+  const content = Object.entries(LESSONS);
   const modal = useRef<HTMLDivElement | null>(null);
   const { width } = useResize();
 
-  const initGSAP = useCallback(() => {
+  const showModal = useCallback(() => {
     const isMobile = width < 768;
 
     if (!isMobile) {
@@ -25,12 +27,20 @@ const TutorialModal = ({ topicIndex, onContinue }: TutorialModalType) => {
       });
 
       gsap.to(".tutorial-modal", {
-        width: "145px",
+        width: "175px",
       });
 
       gsap.to(".tutorial-modal", {
-        width: "290px",
+        width: "350px",
         ...POSITIONS[framePauseIndex],
+      });
+    } else {
+      gsap.from(".tutorial-modal", {
+        width: "0px",
+      });
+
+      gsap.to(".tutorial-modal", {
+        width: "100%",
       });
     }
   }, [framePauseIndex, width]);
@@ -39,7 +49,13 @@ const TutorialModal = ({ topicIndex, onContinue }: TutorialModalType) => {
     onContinue();
   };
 
-  useGsapContext({ callback: initGSAP });
+  useEffect(() => {
+    showModal();
+  }, [showModal]);
+
+  useEffect(() => {
+    hljs.highlightAll();
+  }, [topicIndex]);
 
   return (
     <div className="tutorial-modal" ref={modal}>

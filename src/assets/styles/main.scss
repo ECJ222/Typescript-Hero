@@ -10,7 +10,7 @@
 }
 
 *::selection {
-  background: none;
+  background: rgb(255, 255, 255, 0.9);
 }
 
 html {
@@ -51,28 +51,18 @@ button:focus {
   outline: none;
 }
 
-html.lenis {
-  height: auto;
+pre code.hljs,
+.hljs-params,
+.hljs-subst {
+  color: #6a737d;
 }
 
-.lenis.lenis-smooth {
-  scroll-behavior: auto;
-}
-
-.lenis.lenis-smooth [data-lenis-prevent] {
-  overscroll-behavior: contain;
-}
-
-.lenis.lenis-stopped {
-  overflow: hidden;
+.rotate {
+  animation: rotate 3s ease 0.5s infinite;
 }
 
 @keyframes rotate {
   to {
     transform: rotate(360deg);
   }
-}
-
-.rotate {
-  animation: rotate 3s ease 0.5s infinite;
 }

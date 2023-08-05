@@ -17,7 +17,7 @@ interface GameType {
 const Game = ({ startEndAnimation, resetEndAnimation }: GameType) => {
   const frameCount = 360;
   const images = useRef<HTMLImageElement[]>([]);
-  const currentIndex = useRef(0);
+  const currentIndex = useRef(1);
   const allowScroll = useRef(false);
   const scrollTimeout = useRef<gsap.core.Tween | null>(null);
   const observer = useRef<Observer | null>(null);
@@ -27,7 +27,7 @@ const Game = ({ startEndAnimation, resetEndAnimation }: GameType) => {
   const { width, height } = useResize();
   const { isScrolling, handleScroll } = useScroll();
   const imageContext = require.context("./assets/game-image-sequence/", true, /\.png$/);
-  const pagination = 40;
+  const pagination = 30;
 
   const getCurrentFrame = (position: number): string => {
     return `./anim${String(position + 1).padStart(4, "0")}.png`;
@@ -47,24 +47,24 @@ const Game = ({ startEndAnimation, resetEndAnimation }: GameType) => {
   };
 
   const drawImage = () => {
-    if (images.current[currentIndex.current + pagination]) {
-      const image = images.current[currentIndex.current];
-      console.log(image, currentIndex.current, width, height);
-      const canvas = document.querySelector("canvas") as HTMLCanvasElement;
+    const padding = String(currentIndex.current).padStart(4, "0");
+    const image = images.current.find((image) => image.src.includes(`anim${padding}`));
+    const canvas = document.querySelector("canvas") as HTMLCanvasElement;
 
-      canvas.style.width = `100%`;
-      canvas.style.height = `100%`;
+    canvas.style.width = `100%`;
+    canvas.style.height = `100%`;
 
-      const context = canvas.getContext("2d") as CanvasRenderingContext2D;
+    const context = canvas.getContext("2d") as CanvasRenderingContext2D;
 
-      context.canvas.width = width;
-      context.canvas.height = height;
+    context.canvas.width = width;
+    context.canvas.height = height;
 
-      context.clearRect(0, 0, canvas.width, canvas.height);
+    context.clearRect(0, 0, canvas.width, canvas.height);
 
-      // Draw the image on the canvas
-      context.drawImage(image, 0, 0, canvas.width, canvas.height);
-    } else {
+    // Draw the image on the canvas
+    context.drawImage(image!, 0, 0, canvas.width, canvas.height);
+
+    if (!images.current[currentIndex.current + pagination] && images.current.length < frameCount) {
       createImages();
     }
   };
@@ -93,27 +93,25 @@ const Game = ({ startEndAnimation, resetEndAnimation }: GameType) => {
 
   const goToFrame = (isScrollingDown: boolean) => {
     currentIndex.current = isScrollingDown ? currentIndex.current + 1 : currentIndex.current - 1;
-    const isAtEnd = currentIndex.current === images.current.length - 1;
-    const isAtBeginning = currentIndex.current === 0;
+    const isAtBeginning = currentIndex.current < 2;
+    const isAtEnd = currentIndex.current > frameCount - 2;
+
     if (isAtEnd || isAtBeginning) {
-      // resume native scroll
       observer.current?.disable();
-      if (isAtBeginning) {
-        const homeEl = document.querySelector(".home");
-        homeEl?.scrollIntoView({ behavior: "smooth" });
-      }
-      if (isAtEnd) {
-        startEndAnimation();
-        const endEl = document.querySelector(".end");
-        endEl?.scrollIntoView({ behavior: "smooth" });
+      if (!isScrollingDown) {
+        scrollTrigger.current?.scroll(scrollTrigger.current.start);
+      } else {
+        if (isAtEnd) {
+          startEndAnimation();
+        }
+
+        scrollTrigger.current?.scroll(scrollTrigger.current.end);
       }
       return;
     }
 
-    if (isAtEnd || currentIndex.current > images.current.length - 5) {
-      if (!isScrollingDown) {
-        resetEndAnimation();
-      }
+    if (currentIndex.current === frameCount - 10) {
+      resetEndAnimation();
     }
 
     allowScroll.current = false;
@@ -148,7 +146,7 @@ const Game = ({ startEndAnimation, resetEndAnimation }: GameType) => {
     observer.current = ScrollTrigger.observe({
       type: "wheel,touch",
       onUp: () => {
-        if (currentIndex.current > 0) {
+        if (currentIndex.current > 1) {
           allowScroll.current && goToFrame(false);
         }
       },
@@ -157,7 +155,7 @@ const Game = ({ startEndAnimation, resetEndAnimation }: GameType) => {
           allowScroll.current && goToFrame(true);
         }
       },
-      tolerance: 10,
+      tolerance: 2.5,
       preventDefault: true,
       onEnable(self: any) {
         allowScroll.current = false;
@@ -165,6 +163,7 @@ const Game = ({ startEndAnimation, resetEndAnimation }: GameType) => {
         let savedScroll = self.scrollY();
         // when native scroll repositions, force it back to saved position
         self._restoreScroll = () => self.scrollY(savedScroll);
+
         document.addEventListener("scroll", self._restoreScroll, { passive: false });
       },
       onDisable: (self: any) => document.removeEventListener("scroll", self._restoreScroll),
@@ -176,7 +175,7 @@ const Game = ({ startEndAnimation, resetEndAnimation }: GameType) => {
       trigger: ".game",
       pin: true,
       start: "top top",
-      end: "+=10",
+      end: "+=100",
       onEnter: (self) => {
         if (observer.current?.isEnabled) {
           return;
@@ -188,7 +187,6 @@ const Game = ({ startEndAnimation, resetEndAnimation }: GameType) => {
         if (observer.current?.isEnabled) {
           return;
         }
-
         self.scroll(self.end - 1);
         observer.current?.enable();
       },

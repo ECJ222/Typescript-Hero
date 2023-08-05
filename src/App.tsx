@@ -28,14 +28,14 @@ function App() {
   }, []);
 
   return (
-    <ReactLenis root>
+    <>
       <section className="home">
         <Header />
         <Intro />
       </section>
       <Game startEndAnimation={startEndAnimation} resetEndAnimation={resetEndAnimation} />
       <End startAnimation={isEndAnimationPlaying} />
-    </ReactLenis>
+    </>
   );
 }
 

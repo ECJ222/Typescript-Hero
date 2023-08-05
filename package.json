@@ -6,6 +6,7 @@
     "@types/react": "^18.2.7",
     "@types/react-dom": "^18.2.4",
     "gsap": "^3.12.2",
+    "highlight.js": "^11.8.0",
     "lottie-react": "^2.4.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
@@ -16,10 +17,10 @@
     "web-vitals": "^2.1.4"
   },
   "scripts": {
-    "start": "react-scripts start",
-    "build": "react-scripts build",
-    "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "start": "react-app-rewired start",
+    "build": "react-app-rewired build",
+    "test": "react-app-rewired test",
+    "eject": "react-app-rewired eject"
   },
   "eslintConfig": {
     "extends": [
@@ -43,6 +44,8 @@
     "@babel/plugin-proposal-private-property-in-object": "^7.21.11",
     "@svgr/cli": "^8.0.1",
     "@types/react-router-dom": "^5.3.3",
-    "@types/webpack-env": "^1.18.1"
+    "@types/webpack-env": "^1.18.1",
+    "file-loader": "^6.2.0",
+    "react-app-rewired": "^2.2.1"
   }
 }

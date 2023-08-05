@@ -1,12 +1,9 @@
-// import Morph from "../Morph/Morph";
-import { useLenis } from "@studio-freight/react-lenis";
 import "./Intro.scss";
 
 const Intro = () => {
-  const lenis = useLenis();
-
   const handleClick = () => {
-    lenis.scrollTo(".game");
+    const gameEl = document.querySelector(".game") as HTMLElement;
+    gameEl.scrollIntoView({ behavior: "smooth" });
   };
 
   return (
@@ -18,11 +15,6 @@ const Intro = () => {
           Start
         </button>
       </div>
-      {/* 3D Bird Image */}
-
-      {/* <div className="shape-outer">
-        <Morph />
-      </div> */}
     </div>
   );
 };
