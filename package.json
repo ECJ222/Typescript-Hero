@@ -1,7 +1,6 @@
 {
   "dependencies": {
     "@heroicons/react": "^2.0.18",
-    "@studio-freight/react-lenis": "^0.0.23",
     "@types/node": "^16.18.34",
     "@types/react": "^18.2.7",
     "@types/react-dom": "^18.2.4",
@@ -45,7 +44,6 @@
     "@svgr/cli": "^8.0.1",
     "@types/react-router-dom": "^5.3.3",
     "@types/webpack-env": "^1.18.1",
-    "file-loader": "^6.2.0",
     "react-app-rewired": "^2.2.1"
   }
 }
