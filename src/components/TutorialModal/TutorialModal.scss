@@ -11,7 +11,6 @@
   padding: 1rem;
 
   @media screen and (max-width: 768px) {
-    top: 0;
     z-index: 100;
   }
 
@@ -22,7 +21,7 @@
 
   pre {
     display: flex;
-    height: 120px;
+    height: 220px;
   }
 
   code {

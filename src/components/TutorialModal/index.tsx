@@ -41,6 +41,8 @@ const TutorialModal = ({ topicIndex, onContinue }: TutorialModalType) => {
 
       gsap.to(".tutorial-modal", {
         width: "100%",
+        top: "0",
+        left: "0",
       });
     }
   }, [framePauseIndex, width]);

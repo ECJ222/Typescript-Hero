@@ -155,7 +155,7 @@ const Game = ({ startEndAnimation, resetEndAnimation }: GameType) => {
           allowScroll.current && goToFrame(true);
         }
       },
-      tolerance: 2.5,
+      tolerance: 5,
       preventDefault: true,
       onEnable(self: any) {
         allowScroll.current = false;
@@ -191,6 +191,8 @@ const Game = ({ startEndAnimation, resetEndAnimation }: GameType) => {
         observer.current?.enable();
       },
     });
+
+    ScrollTrigger.sort();
     // eslint-disable-next-line
   }, []);
 
@@ -201,7 +203,6 @@ const Game = ({ startEndAnimation, resetEndAnimation }: GameType) => {
     if (image) {
       if (!image.onload) image.onload = () => drawImage();
       drawImage();
-      scrollTrigger.current?.refresh();
     }
     // eslint-disable-next-line
   }, [width, height]);
@@ -209,9 +210,13 @@ const Game = ({ startEndAnimation, resetEndAnimation }: GameType) => {
   useEffect(() => {
     const root = document.querySelector("#root") as HTMLElement;
 
+    root.addEventListener("scroll", preventScroll, { passive: false });
     root.addEventListener("wheel", preventScroll, { passive: false });
 
-    return () => root.removeEventListener("wheel", preventScroll);
+    return () => {
+      root.removeEventListener("scroll", preventScroll);
+      root.removeEventListener("wheel", preventScroll);
+    };
   }, [preventScroll]);
 
   return (

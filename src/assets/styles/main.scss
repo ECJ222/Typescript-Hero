@@ -57,6 +57,35 @@ pre code.hljs,
   color: #6a737d;
 }
 
+/* width */
+code::-webkit-scrollbar {
+  width: 4px;
+  height: 4px;
+}
+
+/* Track */
+code::-webkit-scrollbar-track {
+  box-shadow: inset 0 0 5px grey;
+  border-radius: 10px;
+}
+
+/* Handle */
+code::-webkit-scrollbar-thumb {
+  background: #fff;
+  border-radius: 10px;
+}
+
+/* Handle on hover */
+code::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.8);
+}
+
+/* Handle vertical and horizontal scroll intersection */
+code::-webkit-scrollbar-corner {
+  height: 0px;
+  width: 0px;
+}
+
 .rotate {
   animation: rotate 3s ease 0.5s infinite;
 }
