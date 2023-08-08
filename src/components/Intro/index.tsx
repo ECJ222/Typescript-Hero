@@ -1,9 +1,9 @@
+import { gsap } from "gsap";
 import "./Intro.scss";
 
 const Intro = () => {
   const handleClick = () => {
-    const gameEl = document.querySelector(".game") as HTMLElement;
-    gameEl.scrollIntoView({ behavior: "smooth" });
+    gsap.to(window, { scrollTo: ".game" });
   };
 
   return (

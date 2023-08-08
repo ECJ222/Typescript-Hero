@@ -91,6 +91,15 @@ const Game = ({ startEndAnimation, resetEndAnimation }: GameType) => {
     }
   }, []);
 
+  const preventKeyboardScroll = useCallback(
+    (e: KeyboardEvent) => {
+      if (e.key === "ArrowUp" || e.key === "ArrowDown") {
+        preventScroll(e);
+      }
+    },
+    [preventScroll]
+  );
+
   const goToFrame = (isScrollingDown: boolean) => {
     currentIndex.current = isScrollingDown ? currentIndex.current + 1 : currentIndex.current - 1;
     const isAtBeginning = currentIndex.current < 2;
@@ -160,9 +169,18 @@ const Game = ({ startEndAnimation, resetEndAnimation }: GameType) => {
       onEnable(self: any) {
         allowScroll.current = false;
         scrollTimeout.current?.restart(true);
-        let savedScroll = self.scrollY();
+        const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+        const gameEl = document.querySelector(".game") as HTMLElement;
+        const gameElScrollTop = gameEl.getBoundingClientRect().top;
+        let savedScroll = gameElScrollTop + scrollTop;
         // when native scroll repositions, force it back to saved position
-        self._restoreScroll = () => self.scrollY(savedScroll);
+        self._restoreScroll = () => {
+          // if (currentIndex.current > 1 && (isTutorialModalOpen || !isScrolling)) {
+          //   gsap.to(window, { scrollTo: { y: ".game", offsetY: 0 } });
+          // } else {
+          self.scrollY(savedScroll);
+          // }
+        };
 
         document.addEventListener("scroll", self._restoreScroll, { passive: false });
       },
@@ -180,19 +198,17 @@ const Game = ({ startEndAnimation, resetEndAnimation }: GameType) => {
         if (observer.current?.isEnabled) {
           return;
         }
-        self.scroll(self.start + 1);
+        // self.scroll(self.start + 1);
         observer.current?.enable();
       },
       onEnterBack: (self) => {
         if (observer.current?.isEnabled) {
           return;
         }
-        self.scroll(self.end - 1);
+        // self.scroll(self.end - 1);
         observer.current?.enable();
       },
     });
-
-    ScrollTrigger.sort();
     // eslint-disable-next-line
   }, []);
 
@@ -202,7 +218,15 @@ const Game = ({ startEndAnimation, resetEndAnimation }: GameType) => {
 
     if (image) {
       if (!image.onload) image.onload = () => drawImage();
-      drawImage();
+      const isAtBeginning = currentIndex.current > 1;
+      const isAtEnd = currentIndex.current < frameCount - 1;
+      if (isAtBeginning && isAtEnd && (isTutorialModalOpen || !isScrolling)) {
+        observer.current?.disable();
+        setTimeout(() => {
+          gsap.to(window, { scrollTo: { y: ".game", offsetY: 0 } });
+          observer.current?.enable();
+        }, 1000);
+      }
     }
     // eslint-disable-next-line
   }, [width, height]);
@@ -213,11 +237,14 @@ const Game = ({ startEndAnimation, resetEndAnimation }: GameType) => {
     root.addEventListener("scroll", preventScroll, { passive: false });
     root.addEventListener("wheel", preventScroll, { passive: false });
 
+    document.addEventListener("keydown", preventKeyboardScroll, { passive: false });
+
     return () => {
       root.removeEventListener("scroll", preventScroll);
       root.removeEventListener("wheel", preventScroll);
+      document.removeEventListener("keydown", preventKeyboardScroll);
     };
-  }, [preventScroll]);
+  }, [preventScroll, preventKeyboardScroll]);
 
   return (
     <section className="game">

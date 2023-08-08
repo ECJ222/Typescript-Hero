@@ -1,12 +1,13 @@
 import { useEffect, useState } from "react";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { ScrollToPlugin } from "gsap/ScrollToPlugin";
 import Header from "./components/Header";
 import Intro from "./components/Intro";
 import Game from "./Game";
 import End from "./End";
 
-gsap.registerPlugin(ScrollTrigger);
+gsap.registerPlugin(ScrollTrigger, ScrollToPlugin);
 
 function App() {
   const [isEndAnimationPlaying, setIsEndAnimationPlaying] = useState(false);
