@@ -12,9 +12,10 @@ import "./assets/styles/game.scss";
 interface GameType {
   startEndAnimation: () => void;
   resetEndAnimation: () => void;
+  imageLoaded: () => void;
 }
 
-const Game = ({ startEndAnimation, resetEndAnimation }: GameType) => {
+const Game = ({ startEndAnimation, resetEndAnimation, imageLoaded }: GameType) => {
   const frameCount = 360;
   const images = useRef<HTMLImageElement[]>([]);
   const currentIndex = useRef(1);
@@ -27,22 +28,44 @@ const Game = ({ startEndAnimation, resetEndAnimation }: GameType) => {
   const { width, height } = useResize();
   const { isScrolling, handleScroll } = useScroll();
   const imageContext = require.context("./assets/game-image-sequence/", true, /\.png$/);
-  const pagination = 30;
+
+  const checkImagesLoaded = () => {
+    const hasImagesLoaded = images.current.every((image) => {
+      return image.complete;
+    });
+
+    if (hasImagesLoaded) {
+      imageLoaded();
+    }
+
+    return hasImagesLoaded;
+  };
 
   const getCurrentFrame = (position: number): string => {
     return `./anim${String(position + 1).padStart(4, "0")}.png`;
   };
 
+  const handleImageLoading = () => {
+    const interval = setInterval(() => {
+      const hasImagesLoaded = checkImagesLoaded();
+
+      if (hasImagesLoaded) {
+        clearInterval(interval);
+      }
+    }, 1000);
+  };
+
   const createImages = () => {
-    if (images.current.length < frameCount) {
+    if (images.current.length <= frameCount) {
       const tempImages: HTMLImageElement[] = [];
-      for (let i = images.current.length; i < images.current.length + pagination; i++) {
+      for (let i = 0; i < frameCount; i++) {
         const img = new Image();
         img.src = imageContext(getCurrentFrame(i));
         tempImages.push(img);
       }
 
       images.current.push(...tempImages);
+      handleImageLoading();
     }
   };
 
@@ -63,10 +86,6 @@ const Game = ({ startEndAnimation, resetEndAnimation }: GameType) => {
 
     // Draw the image on the canvas
     context.drawImage(image!, 0, 0, canvas.width, canvas.height);
-
-    if (!images.current[currentIndex.current + pagination] && images.current.length < frameCount) {
-      createImages();
-    }
   };
 
   const continueGame = () => {
@@ -181,11 +200,7 @@ const Game = ({ startEndAnimation, resetEndAnimation }: GameType) => {
         let savedScroll = gameElScrollTop + scrollTop;
         // when native scroll repositions, force it back to saved position
         self._restoreScroll = () => {
-          // if (currentIndex.current > 1 && (isTutorialModalOpen || !isScrolling)) {
-          //   gsap.to(window, { scrollTo: { y: ".game", offsetY: 0 } });
-          // } else {
           self.scrollY(savedScroll);
-          // }
         };
 
         document.addEventListener("scroll", self._restoreScroll, { passive: false });
@@ -204,14 +219,14 @@ const Game = ({ startEndAnimation, resetEndAnimation }: GameType) => {
         if (observer.current?.isEnabled) {
           return;
         }
-        // self.scroll(self.start + 1);
+        self.scroll(self.start + 1);
         observer.current?.enable();
       },
       onEnterBack: (self) => {
         if (observer.current?.isEnabled) {
           return;
         }
-        // self.scroll(self.end - 1);
+        self.scroll(self.end - 1);
         observer.current?.enable();
       },
     });
@@ -238,16 +253,16 @@ const Game = ({ startEndAnimation, resetEndAnimation }: GameType) => {
   }, [width, height]);
 
   useEffect(() => {
-    const root = document.querySelector("#root") as HTMLElement;
+    const main = document.querySelector("main") as HTMLElement;
 
-    root.addEventListener("scroll", preventScroll, { passive: false });
-    root.addEventListener("wheel", preventScroll, { passive: false });
+    main.addEventListener("scroll", preventScroll, { passive: false });
+    main.addEventListener("wheel", preventScroll, { passive: false });
 
     document.addEventListener("keydown", preventKeyboardScroll, { passive: false });
 
     return () => {
-      root.removeEventListener("scroll", preventScroll);
-      root.removeEventListener("wheel", preventScroll);
+      main.removeEventListener("scroll", preventScroll);
+      main.removeEventListener("wheel", preventScroll);
       document.removeEventListener("keydown", preventKeyboardScroll);
     };
   }, [preventScroll, preventKeyboardScroll]);

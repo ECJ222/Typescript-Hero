@@ -20,12 +20,10 @@ const End = ({ startAnimation }: EndType) => {
         stagger: 0.05,
       });
     } else {
-      // if (!timeline.current.isActive()) {
       timeline.current.to(targets, {
         opacity: 0,
         ease: "none",
       });
-      // }
     }
   }, [startAnimation]);
 

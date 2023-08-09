@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { ScrollToPlugin } from "gsap/ScrollToPlugin";
+import Loader from "./components/Loader";
 import Header from "./components/Header";
 import Intro from "./components/Intro";
 import Game from "./Game";
@@ -11,6 +12,7 @@ gsap.registerPlugin(ScrollTrigger, ScrollToPlugin);
 
 function App() {
   const [isEndAnimationPlaying, setIsEndAnimationPlaying] = useState(false);
+  const [isImageLoaded, setImagesLoading] = useState(true);
 
   const startEndAnimation = () => {
     setIsEndAnimationPlaying(true);
@@ -18,6 +20,11 @@ function App() {
 
   const resetEndAnimation = () => {
     setIsEndAnimationPlaying(false);
+  };
+
+  const handleLoading = () => {
+    console.log("here");
+    setImagesLoading(false);
   };
 
   useEffect(() => {
@@ -29,12 +36,15 @@ function App() {
 
   return (
     <>
-      <section className="home">
-        <Header />
-        <Intro />
-      </section>
-      <Game startEndAnimation={startEndAnimation} resetEndAnimation={resetEndAnimation} />
-      <End startAnimation={isEndAnimationPlaying} />
+      {isImageLoaded ? <Loader /> : <></>}
+      <main className={isImageLoaded ? "overflow-hidden" : ""}>
+        <section className="home">
+          <Header />
+          <Intro />
+        </section>
+        <Game startEndAnimation={startEndAnimation} resetEndAnimation={resetEndAnimation} imageLoaded={handleLoading} />
+        <End startAnimation={isEndAnimationPlaying} />
+      </main>
     </>
   );
 }
