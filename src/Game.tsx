@@ -91,14 +91,19 @@ const Game = ({ startEndAnimation, resetEndAnimation }: GameType) => {
     }
   }, []);
 
-  const preventKeyboardScroll = useCallback(
-    (e: KeyboardEvent) => {
-      if (e.key === "ArrowUp" || e.key === "ArrowDown") {
-        preventScroll(e);
-      }
-    },
-    [preventScroll]
-  );
+  const preventKeyboardScroll = useCallback((e: KeyboardEvent) => {
+    if (e.key === "ArrowUp" || e.key === "ArrowDown") {
+      e.preventDefault();
+      e.stopPropagation();
+
+      window.setTimeout(() => {
+        setIsTutorialModalOpen(true);
+        observer.current?.disable();
+      }, 1000);
+
+      return false;
+    }
+  }, []);
 
   const goToFrame = (isScrollingDown: boolean) => {
     currentIndex.current = isScrollingDown ? currentIndex.current + 1 : currentIndex.current - 1;
@@ -153,15 +158,16 @@ const Game = ({ startEndAnimation, resetEndAnimation }: GameType) => {
     scrollTimeout.current = gsap.delayedCall(0.00001, () => (allowScroll.current = true)).pause();
 
     observer.current = ScrollTrigger.observe({
+      wheelSpeed: -1,
       type: "wheel,touch",
       onUp: () => {
-        if (currentIndex.current > 1) {
-          allowScroll.current && goToFrame(false);
+        if (currentIndex.current < frameCount - 1) {
+          allowScroll.current && goToFrame(true);
         }
       },
       onDown: () => {
-        if (currentIndex.current < frameCount - 1) {
-          allowScroll.current && goToFrame(true);
+        if (currentIndex.current > 1) {
+          allowScroll.current && goToFrame(false);
         }
       },
       tolerance: 5,
