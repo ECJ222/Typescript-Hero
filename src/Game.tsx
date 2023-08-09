@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useLayoutEffect, useRef, useState } from "react";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { Observer } from "gsap/Observer";
@@ -173,7 +173,7 @@ const Game = ({ startEndAnimation, resetEndAnimation, imageLoaded }: GameType) =
   }, []);
 
   // Move through frames when - animation timeline is available.
-  useEffect(() => {
+  useLayoutEffect(() => {
     scrollTimeout.current = gsap.delayedCall(0.00001, () => (allowScroll.current = true)).pause();
 
     observer.current = ScrollTrigger.observe({

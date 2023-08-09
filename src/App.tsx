@@ -23,7 +23,6 @@ function App() {
   };
 
   const handleLoading = () => {
-    console.log("here");
     setImagesLoading(false);
   };
 
