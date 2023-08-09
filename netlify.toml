@@ -1,0 +1,4 @@
+[[headers]]
+ for = '/*'
+ [headers.values]
+  cache-control = 'no-cache'
