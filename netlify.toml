@@ -1,6 +1,4 @@
 [[headers]]
  for = "/*"
  [headers.values]
-   cache-control = '''
-   no-cache
-   max-age=10000'''
+   cache-control = "no-store"
