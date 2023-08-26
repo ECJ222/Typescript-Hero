@@ -101,11 +101,6 @@ const Game = ({ startEndAnimation, resetEndAnimation, imageLoaded }: GameType) =
       e.preventDefault();
       e.stopPropagation();
 
-      window.setTimeout(() => {
-        setIsTutorialModalOpen(true);
-        observer.current?.disable();
-      }, 1000);
-
       return false;
     }
   }, []);
@@ -162,7 +157,9 @@ const Game = ({ startEndAnimation, resetEndAnimation, imageLoaded }: GameType) =
       const futureIndex = isScrollingDown ? currentIndex.current + 1 : currentIndex.current - 1;
       if (FRAME_TO_PAUSE.includes(futureIndex)) {
         isScrollable.current = false;
-        return;
+
+        setIsTutorialModalOpen(true);
+        observer.current?.disable();
       }
     }
   };
@@ -255,14 +252,20 @@ const Game = ({ startEndAnimation, resetEndAnimation, imageLoaded }: GameType) =
   useEffect(() => {
     const main = document.querySelector("main") as HTMLElement;
 
-    main.addEventListener("scroll", preventScroll, { passive: false });
+    // main.addEventListener("scroll", preventScroll, { passive: false });
     main.addEventListener("wheel", preventScroll, { passive: false });
+    // main.addEventListener("touchstart", preventScroll, { passive: false });
+    // main.addEventListener("touchend", preventScroll, { passive: false });
+    main.addEventListener("touchmove", preventScroll, { passive: false });
 
     document.addEventListener("keydown", preventKeyboardScroll, { passive: false });
 
     return () => {
-      main.removeEventListener("scroll", preventScroll);
+      // main.removeEventListener("scroll", preventScroll);
       main.removeEventListener("wheel", preventScroll);
+      // main.removeEventListener("touchstart", preventScroll);
+      // main.removeEventListener("touchend", preventScroll);
+      main.removeEventListener("touchmove", preventScroll);
       document.removeEventListener("keydown", preventKeyboardScroll);
     };
   }, [preventScroll, preventKeyboardScroll]);
