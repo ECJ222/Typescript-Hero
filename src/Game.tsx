@@ -27,6 +27,7 @@ const Game = ({ startEndAnimation, resetEndAnimation, imageLoaded }: GameType) =
   const isScrollable = useRef(true);
   const { width, height } = useResize();
   const { isScrolling, handleScroll } = useScroll();
+  // Get path to images, so it can be dynamically imported.
   const imageContext = require.context("./assets/game-image-sequence/", true, /\.png$/);
 
   const checkImagesLoaded = () => {
@@ -82,6 +83,7 @@ const Game = ({ startEndAnimation, resetEndAnimation, imageLoaded }: GameType) =
     context.canvas.width = width;
     context.canvas.height = height;
 
+    // Clear canvas screen
     context.clearRect(0, 0, canvas.width, canvas.height);
 
     // Draw the image on the canvas
@@ -157,11 +159,37 @@ const Game = ({ startEndAnimation, resetEndAnimation, imageLoaded }: GameType) =
       const futureIndex = isScrollingDown ? currentIndex.current + 1 : currentIndex.current - 1;
       if (FRAME_TO_PAUSE.includes(futureIndex)) {
         isScrollable.current = false;
-
+        // Open tutorial modal
         setIsTutorialModalOpen(true);
         observer.current?.disable();
       }
     }
+  };
+
+  const repositionGameOnResize = () => {
+    const isAtBeginning = currentIndex.current > 1;
+    const isAtEnd = currentIndex.current < frameCount - 1;
+    if (isAtBeginning && isAtEnd && (isTutorialModalOpen || !isScrolling)) {
+      observer.current?.disable();
+      setTimeout(() => {
+        gsap.to(window, { scrollTo: { y: ".game", offsetY: 0 } });
+        observer.current?.enable();
+      }, 1000);
+    }
+  };
+
+  const onObserverEnable = (self: any) => {
+    allowScroll.current = false;
+    scrollTimeout.current?.restart(true);
+    const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+    const gameEl = document.querySelector(".game") as HTMLElement;
+    const gameElScrollTop = gameEl.getBoundingClientRect().top;
+    let savedScroll = gameElScrollTop + scrollTop;
+    self._restoreScroll = () => {
+      self.scrollY(savedScroll);
+    };
+    // When native scroll repositions, force it back to saved position
+    document.addEventListener("scroll", self._restoreScroll, { passive: false });
   };
 
   useEffect(() => {
@@ -189,18 +217,7 @@ const Game = ({ startEndAnimation, resetEndAnimation, imageLoaded }: GameType) =
       tolerance: 5,
       preventDefault: true,
       onEnable(self: any) {
-        allowScroll.current = false;
-        scrollTimeout.current?.restart(true);
-        const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
-        const gameEl = document.querySelector(".game") as HTMLElement;
-        const gameElScrollTop = gameEl.getBoundingClientRect().top;
-        let savedScroll = gameElScrollTop + scrollTop;
-        // when native scroll repositions, force it back to saved position
-        self._restoreScroll = () => {
-          self.scrollY(savedScroll);
-        };
-
-        document.addEventListener("scroll", self._restoreScroll, { passive: false });
+        onObserverEnable(self);
       },
       onDisable: (self: any) => document.removeEventListener("scroll", self._restoreScroll),
     });
@@ -230,21 +247,14 @@ const Game = ({ startEndAnimation, resetEndAnimation, imageLoaded }: GameType) =
     // eslint-disable-next-line
   }, []);
 
-  // In case of resize event - image load
   useEffect(() => {
     const image = images.current[currentIndex.current];
 
     if (image) {
+      // Set image on load event to draw an image.
       if (!image.onload) image.onload = () => drawImage();
-      const isAtBeginning = currentIndex.current > 1;
-      const isAtEnd = currentIndex.current < frameCount - 1;
-      if (isAtBeginning && isAtEnd && (isTutorialModalOpen || !isScrolling)) {
-        observer.current?.disable();
-        setTimeout(() => {
-          gsap.to(window, { scrollTo: { y: ".game", offsetY: 0 } });
-          observer.current?.enable();
-        }, 1000);
-      }
+      // On resize reposition game screen.
+      repositionGameOnResize();
     }
     // eslint-disable-next-line
   }, [width, height]);
