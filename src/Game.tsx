@@ -135,7 +135,7 @@ const Game = ({ startEndAnimation, resetEndAnimation, imageLoaded }: GameType) =
     }
   };
 
-  const repositionBackToGame = useCallback(() => {
+  const repositionBackToGame = () => {
     const isAtBeginning = currentIndex.current > 1;
     const isAtEnd = currentIndex.current < frameCount - 1;
     if (isAtBeginning && isAtEnd && (isTutorialModalOpen || !isScrolling)) {
@@ -145,7 +145,7 @@ const Game = ({ startEndAnimation, resetEndAnimation, imageLoaded }: GameType) =
         observer.current?.enable();
       }, 1000);
     }
-  }, [isScrolling, isTutorialModalOpen]);
+  };
 
   const continueGame = () => {
     isScrollable.current = true;
@@ -155,21 +155,18 @@ const Game = ({ startEndAnimation, resetEndAnimation, imageLoaded }: GameType) =
     }, 1000);
   };
 
-  const preventScroll = useCallback(
-    (e: Event) => {
-      const el = e.target as HTMLElement;
+  const preventScroll = useCallback((e: Event) => {
+    const el = e.target as HTMLElement;
 
-      if (!isScrollable.current && el.tagName.toLowerCase() !== "code") {
-        e.preventDefault();
-        e.stopPropagation();
-      }
+    if (!isScrollable.current && el.tagName.toLowerCase() !== "code") {
+      e.preventDefault();
+      e.stopPropagation();
+    }
 
-      if (!isScrollable.current && el.tagName.toLowerCase() !== "canvas") {
-        repositionBackToGame();
-      }
-    },
-    [repositionBackToGame]
-  );
+    if (!isScrollable.current && el.tagName.toLowerCase() !== "canvas") {
+      gsap.to(window, { scrollTo: { y: ".game", offsetY: 0 } });
+    }
+  }, []);
 
   const preventKeyboardScroll = useCallback((e: KeyboardEvent) => {
     if (e.key === "ArrowUp" || e.key === "ArrowDown") {
