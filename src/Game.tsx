@@ -159,7 +159,7 @@ const Game = ({ startEndAnimation, resetEndAnimation, imageLoaded }: GameType) =
     (e: Event) => {
       const el = e.target as HTMLElement;
 
-      if (!isScrollable.current && el.tagName.toLowerCase() === "canvas") {
+      if (!isScrollable.current && el.tagName.toLowerCase() !== "code") {
         e.preventDefault();
         e.stopPropagation();
       }
