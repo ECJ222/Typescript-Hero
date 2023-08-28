@@ -90,37 +90,6 @@ const Game = ({ startEndAnimation, resetEndAnimation, imageLoaded }: GameType) =
     context.drawImage(image!, 0, 0, canvas.width, canvas.height);
   };
 
-  const continueGame = () => {
-    isScrollable.current = true;
-    window.setTimeout(() => {
-      setIsTutorialModalOpen(false);
-      observer.current?.enable();
-    }, 1000);
-  };
-
-  const preventScroll = useCallback((e: Event) => {
-    if (!isScrollable.current) {
-      e.preventDefault();
-      e.stopPropagation();
-
-      return false;
-    }
-  }, []);
-
-  const preventKeyboardScroll = useCallback((e: KeyboardEvent) => {
-    if (e.key === "ArrowUp" || e.key === "ArrowDown") {
-      e.preventDefault();
-      e.stopPropagation();
-
-      window.setTimeout(() => {
-        setIsTutorialModalOpen(true);
-        observer.current?.disable();
-      }, 1000);
-
-      return false;
-    }
-  }, []);
-
   const goToFrame = (isScrollingDown: boolean) => {
     currentIndex.current = isScrollingDown ? currentIndex.current + 1 : currentIndex.current - 1;
     const isAtBeginning = currentIndex.current < 2;
@@ -166,7 +135,7 @@ const Game = ({ startEndAnimation, resetEndAnimation, imageLoaded }: GameType) =
     }
   };
 
-  const repositionGameOnResize = () => {
+  const repositionBackToGame = useCallback(() => {
     const isAtBeginning = currentIndex.current > 1;
     const isAtEnd = currentIndex.current < frameCount - 1;
     if (isAtBeginning && isAtEnd && (isTutorialModalOpen || !isScrolling)) {
@@ -176,7 +145,45 @@ const Game = ({ startEndAnimation, resetEndAnimation, imageLoaded }: GameType) =
         observer.current?.enable();
       }, 1000);
     }
+  }, [isScrolling, isTutorialModalOpen]);
+
+  const continueGame = () => {
+    isScrollable.current = true;
+    window.setTimeout(() => {
+      setIsTutorialModalOpen(false);
+      observer.current?.enable();
+    }, 1000);
   };
+
+  const preventScroll = useCallback(
+    (e: Event) => {
+      const el = e.target as HTMLElement;
+
+      if (!isScrollable.current && el.tagName.toLowerCase() === "canvas") {
+        e.preventDefault();
+        e.stopPropagation();
+      }
+
+      if (!isScrollable.current && el.tagName.toLowerCase() !== "canvas") {
+        repositionBackToGame();
+      }
+    },
+    [repositionBackToGame]
+  );
+
+  const preventKeyboardScroll = useCallback((e: KeyboardEvent) => {
+    if (e.key === "ArrowUp" || e.key === "ArrowDown") {
+      e.preventDefault();
+      e.stopPropagation();
+
+      window.setTimeout(() => {
+        setIsTutorialModalOpen(true);
+        observer.current?.disable();
+      }, 1000);
+
+      return false;
+    }
+  }, []);
 
   const onObserverEnable = (self: any) => {
     allowScroll.current = false;
@@ -254,7 +261,7 @@ const Game = ({ startEndAnimation, resetEndAnimation, imageLoaded }: GameType) =
       // Set image on load event to draw an image.
       if (!image.onload) image.onload = () => drawImage();
       // On resize reposition game screen.
-      repositionGameOnResize();
+      repositionBackToGame();
     }
     // eslint-disable-next-line
   }, [width, height]);
