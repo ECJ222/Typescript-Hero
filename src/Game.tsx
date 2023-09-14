@@ -127,10 +127,10 @@ const Game = ({ startEndAnimation, resetEndAnimation, imageLoaded }: GameType) =
       handleScroll();
       const futureIndex = isScrollingDown ? currentIndex.current + 1 : currentIndex.current - 1;
       if (FRAME_TO_PAUSE.includes(futureIndex)) {
-        isScrollable.current = false;
-        // Open tutorial modal
-        setIsTutorialModalOpen(true);
-        observer.current?.disable();
+        pauseGame();
+        window.setTimeout(() => {
+          continueGame();
+        }, 1000);
       }
     }
   };
@@ -147,12 +147,16 @@ const Game = ({ startEndAnimation, resetEndAnimation, imageLoaded }: GameType) =
     }
   };
 
+  const pauseGame = () => {
+    isScrollable.current = false;
+    // Open tutorial modal
+    setIsTutorialModalOpen(true);
+    observer.current?.disable();
+  };
+
   const continueGame = () => {
     isScrollable.current = true;
-    window.setTimeout(() => {
-      setIsTutorialModalOpen(false);
-      observer.current?.enable();
-    }, 1000);
+    observer.current?.enable();
   };
 
   const preventScroll = useCallback((e: Event) => {
@@ -165,6 +169,10 @@ const Game = ({ startEndAnimation, resetEndAnimation, imageLoaded }: GameType) =
 
     if (!isScrollable.current && el.tagName.toLowerCase() !== "canvas") {
       gsap.to(window, { scrollTo: { y: ".game", offsetY: 0 } });
+    }
+
+    if (!FRAME_TO_PAUSE.includes(currentIndex.current) && isScrollable.current && el.tagName.toLowerCase() !== "code") {
+      setIsTutorialModalOpen(false);
     }
   }, []);
 
@@ -280,12 +288,12 @@ const Game = ({ startEndAnimation, resetEndAnimation, imageLoaded }: GameType) =
   return (
     <section className="game">
       <canvas></canvas>
-      {currentIndex.current > 0 && currentIndex.current < frameCount - 1 && !isScrolling && isScrollable.current ? (
+      {currentIndex.current > 0 && currentIndex.current < frameCount - 1 && !isScrolling && isScrollable.current && !isTutorialModalOpen ? (
         <Lottie className="swipe-up" animationData={SwipeUpAnimation} loop={true} />
       ) : (
         <></>
       )}
-      {isTutorialModalOpen ? <TutorialModal topicIndex={currentIndex.current} onContinue={continueGame} /> : <></>}
+      {isTutorialModalOpen ? <TutorialModal topicIndex={currentIndex.current} /> : <></>}
     </section>
   );
 };
