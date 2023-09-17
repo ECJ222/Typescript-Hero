@@ -9,7 +9,7 @@ const Intro = () => {
   return (
     <div className="intro">
       <div className="intro__cta">
-        <span className="intro__text">Navigate This TypeScript Terrain with Our Feathered Friend.</span>
+        <span className="intro__text">Navigate This Typescript Terrain with Our Feathered Friend.</span>
 
         <button className="intro__btn" onClick={handleClick}>
           Start
