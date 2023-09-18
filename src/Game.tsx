@@ -217,11 +217,17 @@ const Game = ({ startEndAnimation, resetEndAnimation, imageLoaded }: GameType) =
       wheelSpeed: -1,
       type: "wheel,touch",
       onUp: () => {
+        if (!observer.current?.isEnabled) {
+          observer.current?.enable();
+        }
         if (currentIndex.current < frameCount - 1) {
           allowScroll.current && goToFrame(true);
         }
       },
       onDown: () => {
+        if (!observer.current?.isEnabled) {
+          observer.current?.enable();
+        }
         if (currentIndex.current > 1) {
           allowScroll.current && goToFrame(false);
         }

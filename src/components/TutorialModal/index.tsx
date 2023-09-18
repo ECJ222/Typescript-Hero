@@ -1,4 +1,5 @@
 import { useCallback, useEffect } from "react";
+import sanitizeHtml from "sanitize-html";
 import hljs from "highlight.js";
 import "highlight.js/styles/github.css";
 import { gsap } from "gsap";
@@ -46,8 +47,8 @@ const TutorialModal = ({ topicIndex }: TutorialModalType) => {
   }, [framePauseIndex, width]);
 
   const getContent = () => {
-    const topic = content[framePauseIndex]?.[0];
-    const body = content[framePauseIndex]?.[1];
+    const topic = sanitizeHtml(content[framePauseIndex]?.[0]);
+    const body = sanitizeHtml(content[framePauseIndex]?.[1]);
 
     return {
       topic,
