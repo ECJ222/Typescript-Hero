@@ -28,7 +28,7 @@
     max-height: calc(100vh - 200px);
     background-color: #1f1f1f;
     padding: 0.5rem;
-    overflow: auto;
+    overflow: scroll;
   }
 
   &__topic-continue-btn {

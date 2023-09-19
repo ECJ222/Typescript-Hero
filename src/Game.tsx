@@ -128,7 +128,7 @@ const Game = ({ startEndAnimation, resetEndAnimation, imageLoaded }: GameType) =
       const futureIndex = isScrollingDown ? currentIndex.current + 1 : currentIndex.current - 1;
       if (FRAME_TO_PAUSE.includes(futureIndex)) {
         pauseGame();
-        window.setTimeout(() => {
+        setTimeout(() => {
           continueGame();
         }, 1000);
       }
@@ -162,16 +162,16 @@ const Game = ({ startEndAnimation, resetEndAnimation, imageLoaded }: GameType) =
   const preventScroll = useCallback((e: Event) => {
     const el = e.target as HTMLElement;
 
-    if (!isScrollable.current && el.tagName.toLowerCase() !== "code") {
-      e.preventDefault();
-      e.stopPropagation();
-    }
+    if (!isScrollable.current) {
+      if (el.tagName.toLowerCase() !== "code") {
+        e.preventDefault();
+        e.stopPropagation();
+      }
 
-    if (!isScrollable.current && el.tagName.toLowerCase() !== "canvas") {
-      gsap.to(window, { scrollTo: { y: ".game", offsetY: 0 } });
-    }
-
-    if (!FRAME_TO_PAUSE.includes(currentIndex.current) && isScrollable.current && el.tagName.toLowerCase() !== "code") {
+      if (el.tagName.toLowerCase() !== "canvas") {
+        gsap.to(window, { scrollTo: { y: ".game", offsetY: 0 } });
+      }
+    } else {
       setIsTutorialModalOpen(false);
     }
   }, []);
