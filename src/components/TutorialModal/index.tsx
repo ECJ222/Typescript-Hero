@@ -10,9 +10,11 @@ import "./TutorialModal.scss";
 
 interface TutorialModalType {
   topicIndex: number;
+  onContinue: () => void;
+  onCompleted: () => void;
 }
 
-const TutorialModal = ({ topicIndex }: TutorialModalType) => {
+const TutorialModal = ({ topicIndex, onContinue, onCompleted }: TutorialModalType) => {
   const framePauseIndex: number = FRAME_TO_PAUSE.findIndex((index) => index === topicIndex + 1 || index === topicIndex - 1);
   const content = Object.entries(LESSONS);
   const { width } = useResize();
@@ -42,12 +44,15 @@ const TutorialModal = ({ topicIndex }: TutorialModalType) => {
         width: "100%",
         top: "0",
         left: "0",
+        onComplete: () => {
+          onCompleted();
+        },
       });
     }
   }, [framePauseIndex, width]);
 
   const getContent = () => {
-    const topic = sanitizeHtml(content[framePauseIndex]?.[0]);
+    const topic = content[framePauseIndex]?.[0];
     const body = sanitizeHtml(content[framePauseIndex]?.[1]);
 
     return {
@@ -70,6 +75,9 @@ const TutorialModal = ({ topicIndex }: TutorialModalType) => {
       <pre>
         <code className="language-typescript">{getContent().body}</code>
       </pre>
+      <button className="tutorial-modal__continue-btn" onClick={onContinue}>
+        Continue
+      </button>
     </div>
   );
 };

@@ -128,9 +128,13 @@ const Game = ({ startEndAnimation, resetEndAnimation, imageLoaded }: GameType) =
       const futureIndex = isScrollingDown ? currentIndex.current + 1 : currentIndex.current - 1;
       if (FRAME_TO_PAUSE.includes(futureIndex)) {
         pauseGame();
-        setTimeout(() => {
-          continueGame();
-        }, 1000);
+
+        // Auto-continue on desktop screens
+        if (width > 1024) {
+          setTimeout(() => {
+            continueGame();
+          }, 1000);
+        }
       }
     }
   };
@@ -141,8 +145,10 @@ const Game = ({ startEndAnimation, resetEndAnimation, imageLoaded }: GameType) =
     if (isAtBeginning && isAtEnd && (isTutorialModalOpen || !isScrolling)) {
       observer.current?.disable();
       setTimeout(() => {
-        gsap.to(window, { scrollTo: { y: ".game", offsetY: 0 } });
-        observer.current?.enable();
+        goToGame();
+        if (!isTutorialModalOpen) {
+          observer.current?.enable();
+        }
       }, 1000);
     }
   };
@@ -155,6 +161,16 @@ const Game = ({ startEndAnimation, resetEndAnimation, imageLoaded }: GameType) =
   };
 
   const continueGame = () => {
+    if (width <= 1024) {
+      goToGame();
+      const tutorialModal = document.querySelector(".tutorial-modal") as HTMLElement;
+      tutorialModal.style.position = "absolute";
+      const mainEl = document.querySelector("main") as HTMLElement;
+      mainEl.style.overflow = "initial";
+      // Close tutorial modal
+      setIsTutorialModalOpen(false);
+    }
+
     isScrollable.current = true;
     observer.current?.enable();
   };
@@ -162,6 +178,7 @@ const Game = ({ startEndAnimation, resetEndAnimation, imageLoaded }: GameType) =
   const preventScroll = useCallback((e: Event) => {
     const el = e.target as HTMLElement;
 
+    console.log(isTutorialModalOpen, currentIndex.current, isScrollable.current);
     if (!isScrollable.current) {
       if (el.tagName.toLowerCase() !== "code") {
         e.preventDefault();
@@ -169,7 +186,7 @@ const Game = ({ startEndAnimation, resetEndAnimation, imageLoaded }: GameType) =
       }
 
       if (el.tagName.toLowerCase() !== "canvas") {
-        gsap.to(window, { scrollTo: { y: ".game", offsetY: 0 } });
+        goToGame();
       }
     } else {
       setIsTutorialModalOpen(false);
@@ -204,6 +221,20 @@ const Game = ({ startEndAnimation, resetEndAnimation, imageLoaded }: GameType) =
     document.addEventListener("scroll", self._restoreScroll, { passive: false });
   };
 
+  const goToGame = () => {
+    gsap.to(window, { scrollTo: { y: ".game", offsetY: 0 } });
+  };
+
+  const handleAnimationComplete = () => {
+    if (width <= 1024) {
+      const tutorialModal = document.querySelector(".tutorial-modal") as HTMLElement;
+      tutorialModal.style.position = "fixed";
+      tutorialModal.style.top = "-" + tutorialModal.offsetHeight + "px";
+      const mainEl = document.querySelector("main") as HTMLElement;
+      mainEl.style.overflow = "hidden";
+    }
+  };
+
   useEffect(() => {
     createImages();
     // eslint-disable-next-line
@@ -217,18 +248,12 @@ const Game = ({ startEndAnimation, resetEndAnimation, imageLoaded }: GameType) =
       wheelSpeed: -1,
       type: "wheel,touch",
       onUp: () => {
-        if (!observer.current?.isEnabled) {
-          observer.current?.enable();
-        }
-        if (currentIndex.current < frameCount - 1) {
+        if (currentIndex.current < frameCount - 1 && isScrollable.current) {
           allowScroll.current && goToFrame(true);
         }
       },
       onDown: () => {
-        if (!observer.current?.isEnabled) {
-          observer.current?.enable();
-        }
-        if (currentIndex.current > 1) {
+        if (currentIndex.current > 1 && isScrollable.current) {
           allowScroll.current && goToFrame(false);
         }
       },
@@ -299,7 +324,11 @@ const Game = ({ startEndAnimation, resetEndAnimation, imageLoaded }: GameType) =
       ) : (
         <></>
       )}
-      {isTutorialModalOpen ? <TutorialModal topicIndex={currentIndex.current} /> : <></>}
+      {isTutorialModalOpen ? (
+        <TutorialModal topicIndex={currentIndex.current} onContinue={continueGame} onCompleted={handleAnimationComplete} />
+      ) : (
+        <></>
+      )}
     </section>
   );
 };
