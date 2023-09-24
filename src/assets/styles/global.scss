@@ -29,6 +29,10 @@ body {
   color: #fff;
 }
 
+body::-webkit-scrollbar {
+  display: none;
+}
+
 main {
   height: 100vh;
 }
