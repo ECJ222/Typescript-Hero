@@ -21,11 +21,16 @@
 
   pre {
     display: flex;
+    height: 100%;
+
+    @media screen and (min-width: 1024px) {
+      height: initial;
+    }
   }
 
   code {
     width: 100%;
-    height: calc(100vh - 100px);
+    height: 100%;
     background-color: #1f1f1f;
     padding: 0.5rem;
     overflow: auto;

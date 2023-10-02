@@ -229,7 +229,8 @@ const Game = ({ startEndAnimation, resetEndAnimation, imageLoaded }: GameType) =
     if (width <= 1024) {
       const tutorialModal = document.querySelector(".tutorial-modal") as HTMLElement;
       tutorialModal.style.position = "fixed";
-      tutorialModal.style.top = "-" + tutorialModal.offsetHeight + "px";
+      tutorialModal.style.top = "-" + window.innerHeight + "px";
+      tutorialModal.style.height = window.innerHeight + "px";
       const mainEl = document.querySelector("main") as HTMLElement;
       mainEl.style.overflow = "hidden";
     }
