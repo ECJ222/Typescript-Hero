@@ -1,1 +1,2 @@
-Intro - Filled with typescript concepts
+A typescript learning game-like experience.
+
