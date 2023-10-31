@@ -2,5 +2,6 @@
   for = "/*"
   [headers.values]
   cache-control = '''
+  no-cache,
   max-age=1000,
   must-revalidate'''
