@@ -1,5 +1,5 @@
 [[headers]]
-  for = "https://no-store--typescript-hero.netlify.app/"
+  for = "no-store--typescript-hero.netlify.app/"
   [headers.values]
   cache-control = '''
   no-store,
