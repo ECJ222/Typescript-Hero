@@ -1,4 +1,6 @@
 [[headers]]
   for = "/*"
   [headers.values]
-  cache-control = "no-cache"
+  cache-control = '''
+  max-age=1000,
+  must-revalidate'''
