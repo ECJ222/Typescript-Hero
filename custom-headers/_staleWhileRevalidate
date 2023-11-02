@@ -1,0 +1,2 @@
+/*
+  cache-control: stale-while-revalidate=3600
