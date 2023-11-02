@@ -1,6 +1,29 @@
-[[headers]]
-  for = "no-store--typescript-hero.netlify.app/"
-  [headers.values]
-  cache-control = '''
-  no-store,
-  '''
+[context.no-store] 
+command = "npm run build && cp ./custom-headers/_noStore ./dist/_headers"
+
+[context.no-cache] 
+command = "npm run build && cp ./custom-headers/_noCache ./dist/_headers"
+
+[context.s-maxage] 
+command = "npm run build && cp ./custom-headers/_sMaxAge ./dist/_headers"
+
+[context.max-age] 
+command = "npm run build && cp ./custom-headers/_maxAge ./dist/_headers"
+
+[context.private] 
+command = "npm run build && cp ./custom-headers/_private ./dist/_headers"
+
+[context.min-fresh] 
+command = "npm run build && cp ./custom-headers/_minFresh ./dist/_headers"
+
+[context.only-if-cached] 
+command = "npm run build && cp ./custom-headers/_onlyIfCached ./dist/_headers"
+
+[context.proxyRevalidate] 
+command = "npm run build && cp ./custom-headers/_proxyRevalidate ./dist/_headers"
+
+[context.stale-if-error] 
+command = "npm run build && cp ./custom-headers/_staleIfError ./dist/_headers"
+
+[context.stale-while-revalidate] 
+command = "npm run build && cp ./custom-headers/_staleWhileRevalidate ./dist/_headers"
