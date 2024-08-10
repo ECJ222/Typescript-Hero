@@ -1,0 +1,24 @@
+.preload {
+  width: 100%;
+  display: grid;
+  place-items: center;
+
+  &--full-screen {
+    position: fixed;
+    top: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: #000;
+    z-index: 100;
+    overflow: hidden;
+  }
+
+  &__icon {
+    width: 100%;
+    max-width: calc(100vw - 25%);
+
+    path {
+      opacity: 0;
+    }
+  }
+}

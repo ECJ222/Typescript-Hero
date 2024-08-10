@@ -1,4 +1,4 @@
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState, useRef } from 'react';
 
 export const useScroll = () => {
   const [isScrolling, setIsScrolling] = useState(false);
@@ -21,10 +21,10 @@ export const useScroll = () => {
 
   useEffect(() => {
     // Add event listener
-    window.addEventListener("scroll", handleScroll);
+    window.addEventListener('scroll', handleScroll);
     // Remove event listener on cleanup
     return () => {
-      window.removeEventListener("scroll", handleScroll);
+      window.removeEventListener('scroll', handleScroll);
 
       if (scrollTimeout.current) {
         clearTimeout(scrollTimeout.current);

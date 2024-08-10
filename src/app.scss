@@ -1,0 +1,197 @@
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  -webkit-tap-highlight-color: none;
+}
+
+*::selection {
+  background: rgb(255, 255, 255, 0.9);
+}
+
+@keyframes rotate {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+html {
+  font-size: 92%;
+
+  @media screen and (min-width: 1024px) {
+    font-size: 100%;
+  }
+}
+
+body {
+  font-family: sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  background-color: #000;
+  color: #fff;
+}
+
+body::-webkit-scrollbar {
+  display: none;
+}
+
+main {
+  height: 100vh;
+}
+
+.hidden {
+  overflow: hidden;
+}
+
+img {
+  max-width: 100%;
+}
+
+button {
+  background-color: transparent;
+  border: none;
+  cursor: pointer;
+}
+
+button:focus {
+  outline: none;
+}
+
+pre code.hljs,
+.hljs-params,
+.hljs-subst {
+  color: #6a737d;
+}
+
+/* width */
+code::-webkit-scrollbar {
+  -webkit-appearance: none;
+  width: 8px;
+  height: 8px;
+}
+
+/* Track */
+code::-webkit-scrollbar-track {
+  box-shadow: inset 0 0 5px grey;
+  border-radius: 10px;
+}
+
+/* Handle */
+code::-webkit-scrollbar-thumb {
+  background: #fff;
+  border-radius: 10px;
+}
+
+/* Handle on hover */
+code::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.8);
+}
+
+/* Handle vertical and horizontal scroll intersection */
+code::-webkit-scrollbar-corner {
+  height: 0px;
+  width: 0px;
+}
+
+.rotate {
+  animation: rotate 3s ease 0.5s infinite;
+}
+
+.screen {
+  &__start {
+    .header {
+      padding: 20px 24px;
+
+      nav {
+        display: flex;
+
+        button {
+          margin-left: auto;
+          width: 40px;
+          height: 40px;
+          cursor: pointer;
+        }
+
+        audio {
+          display: none;
+        }
+      }
+    }
+
+    .intro {
+      width: 100%;
+      height: calc(100vh - 99px);
+      text-align: center;
+      position: relative;
+
+      &__cta {
+        position: absolute;
+        top: 45%;
+        left: 50%;
+        transform: translate(-50%, -45%);
+      }
+
+      &__text {
+        font-size: 2rem;
+        font-weight: 600;
+        margin-bottom: 2rem;
+      }
+
+      a {
+        text-decoration: none;
+      }
+
+      &__btn {
+        display: block;
+        font-size: 1.5rem;
+        font-weight: 500;
+        padding: 1rem 2rem;
+        border: 2px solid #fff;
+        border-radius: 50px;
+        background-color: transparent;
+        color: #fff;
+        cursor: pointer;
+        max-width: 175px;
+        transition: all 0.3s ease-in-out;
+        margin: 2rem auto 0;
+
+        &:hover {
+          background-color: #fff;
+          color: #000;
+        }
+      }
+    }
+  }
+
+  &__game {
+    width: 100%;
+    height: 100vh;
+    position: relative;
+  }
+
+  &__end {
+    height: 100vh;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+
+    .text {
+      display: block;
+      font-size: 1rem;
+      margin-top: 1rem;
+    }
+  }
+}
+
+.swipe-up {
+  width: 200px;
+  height: 200px;
+  position: absolute;
+  right: 1%;
+  bottom: 4%;
+  z-index: 2;
+}

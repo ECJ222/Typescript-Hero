@@ -1,15 +1,14 @@
-import { gsap } from "gsap";
-import "./Intro.scss";
+import { gsap } from 'gsap';
 
 const Intro = () => {
   const handleClick = () => {
-    gsap.to(window, { scrollTo: ".game" });
+    gsap.to(window, { scrollTo: '.screen__game' });
   };
 
   return (
     <div className="intro">
       <div className="intro__cta">
-        <span className="intro__text">Navigate This Typescript Terrain with Our Feathered Friend.</span>
+        <span className="intro__text">Navigate This Terrain with Our Feathered Friend Typpy.</span>
 
         <button className="intro__btn" onClick={handleClick}>
           Start

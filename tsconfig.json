@@ -1,6 +1,6 @@
 {
   "compilerOptions": {
-    "target": "es5",
+    "target": "ESNext",
     "lib": [
       "dom",
       "dom.iterable",
@@ -19,11 +19,9 @@
     "isolatedModules": true,
     "noEmit": true,
     "jsx": "react-jsx",
-    "types": ["webpack-env"]
+    "types": ["vite/client", "node"]
   },
   "include": [
-    "./node_modules/react-scripts/lib/react-app.d.ts",
-    "src",
-    "types/**/*.d.ts"
+    "src"
   ]
 }
