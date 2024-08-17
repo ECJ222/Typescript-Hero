@@ -20,7 +20,8 @@
     "preview": "vite preview",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
-    "format": "prettier --write \"**/*.{js,ts,tsx}\" --config ./.prettierrc.js"
+    "format": "prettier --write \"**/*.{js,ts,tsx}\" --config ./.prettierrc.js",
+    "prepare": "husky"
   },
   "devDependencies": {
     "@babel/plugin-proposal-private-property-in-object": "^7.21.11",
@@ -37,6 +38,7 @@
     "eslint-plugin-prettier": "^5.2.1",
     "eslint-plugin-react": "^7.35.0",
     "globals": "^15.9.0",
+    "husky": "^9.1.4",
     "prettier": "^3.3.3",
     "typescript-eslint": "^8.0.1",
     "vite": "^5.3.5",

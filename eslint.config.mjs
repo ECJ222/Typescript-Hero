@@ -22,6 +22,9 @@ export default [
   ...tseslint.configs.recommended,
   pluginReactConfig,
   eslintConfigPrettier,
+  {
+    ignores: ['node_modules/', 'dist/'],
+  }
 ];
 
 
