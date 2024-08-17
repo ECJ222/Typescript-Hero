@@ -102,6 +102,10 @@ code::-webkit-scrollbar-corner {
 .screen {
   &__start {
     .header {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
       padding: 20px 24px;
 
       nav {
@@ -122,15 +126,15 @@ code::-webkit-scrollbar-corner {
 
     .intro {
       width: 100%;
-      height: calc(100vh - 99px);
+      height: 100vh;
       text-align: center;
       position: relative;
 
       &__cta {
         position: absolute;
-        top: 45%;
+        top: 50%;
         left: 50%;
-        transform: translate(-50%, -45%);
+        transform: translate(-50%, -50%);
       }
 
       &__text {
@@ -188,8 +192,8 @@ code::-webkit-scrollbar-corner {
 }
 
 .swipe-up {
-  width: 200px;
-  height: 200px;
+  width: min(150px, 20vw);
+  height: min(100px, 20vw);
   position: absolute;
   right: 0;
   bottom: 0;
