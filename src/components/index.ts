@@ -1,4 +1,4 @@
-import { Preload } from './Preload';
-import { Lesson } from './Lesson';
+import { Preload } from './Preload'
+import { Lesson } from './Lesson'
 
-export { Preload, Lesson };
+export { Preload, Lesson }

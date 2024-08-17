@@ -1,36 +1,36 @@
-import { useEffect, useState, useRef } from 'react';
+import { useEffect, useState, useRef } from 'react'
 
 export const useScroll = () => {
-  const [isScrolling, setIsScrolling] = useState(false);
+  const [isScrolling, setIsScrolling] = useState(false)
   // Store the timeout ID
-  const scrollTimeout = useRef<NodeJS.Timeout | null>(null);
+  const scrollTimeout = useRef<NodeJS.Timeout | null>(null)
 
   const handleScroll = () => {
     // Clear the timeout if it exists
     if (scrollTimeout.current) {
-      clearTimeout(scrollTimeout.current);
+      clearTimeout(scrollTimeout.current)
     }
 
-    setIsScrolling(true);
+    setIsScrolling(true)
     // Set a new timeout
     scrollTimeout.current = setTimeout(() => {
       // After 100ms of no scrolling, setIsScrolling to false
-      setIsScrolling(false);
-    }, 100);
-  };
+      setIsScrolling(false)
+    }, 100)
+  }
 
   useEffect(() => {
     // Add event listener
-    window.addEventListener('scroll', handleScroll);
+    window.addEventListener('scroll', handleScroll)
     // Remove event listener on cleanup
     return () => {
-      window.removeEventListener('scroll', handleScroll);
+      window.removeEventListener('scroll', handleScroll)
 
       if (scrollTimeout.current) {
-        clearTimeout(scrollTimeout.current);
+        clearTimeout(scrollTimeout.current)
       }
-    };
-  }, []);
+    }
+  }, [])
 
-  return { isScrolling, handleScroll };
-};
+  return { isScrolling, handleScroll }
+}

@@ -1,9 +1,9 @@
-import { gsap } from 'gsap';
+import { gsap } from 'gsap'
 
 const Intro = () => {
   const handleClick = () => {
-    gsap.to(window, { scrollTo: '.screen__game' });
-  };
+    gsap.to(window, { scrollTo: '.screen__game' })
+  }
 
   return (
     <div className="intro">
@@ -15,7 +15,7 @@ const Intro = () => {
         </button>
       </div>
     </div>
-  );
-};
+  )
+}
 
-export default Intro;
+export default Intro

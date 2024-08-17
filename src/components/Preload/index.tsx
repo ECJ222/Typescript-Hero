@@ -1,37 +1,37 @@
-import { useEffect, useRef } from 'react';
-import { gsap } from 'gsap';
-import { clsx } from 'clsx';
-import './preload.scss';
+import { useEffect, useRef } from 'react'
+import { gsap } from 'gsap'
+import { clsx } from 'clsx'
+import './preload.scss'
 
 interface PreloadProps {
-  fullScreen?: boolean;
-  start?: boolean;
-  infinite?: boolean;
+  fullScreen?: boolean
+  start?: boolean
+  infinite?: boolean
 }
 
 export const Preload = ({ fullScreen = true, start = false, infinite = true }: PreloadProps) => {
-  const timeline = useRef<gsap.core.Timeline>();
+  const timeline = useRef<gsap.core.Timeline>()
 
   useEffect(() => {
     if (infinite) {
-      timeline.current = gsap.timeline({ repeat: -1, repeatDelay: 1 });
+      timeline.current = gsap.timeline({ repeat: -1, repeatDelay: 1 })
     } else {
-      timeline.current = gsap.timeline();
+      timeline.current = gsap.timeline()
     }
 
-    const targets = gsap.utils.toArray('.preload svg path');
+    const targets = gsap.utils.toArray('.preload svg path')
     if (start || infinite) {
       timeline.current.to(targets, {
         opacity: 1,
         duration: 1,
         stagger: 0.05
-      });
+      })
     }
 
     return () => {
-      timeline.current?.kill();
-    };
-  }, [start]);
+      timeline.current?.kill()
+    }
+  }, [start])
 
   return (
     <div className={clsx({ preload: true, 'preload--full-screen': fullScreen })}>
@@ -68,5 +68,5 @@ export const Preload = ({ fullScreen = true, start = false, infinite = true }: P
         </svg>
       </div>
     </div>
-  );
-};
+  )
+}

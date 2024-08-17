@@ -287,22 +287,22 @@ class Greeter {
     }
 }
 `
-};
+}
 
-export const MAX_LOADED_IMAGES = 45;
+export const MAX_LOADED_IMAGES = 45
 
-export const FRAME_COUNT = 360;
+export const FRAME_COUNT = 360
 
-export const FRAME_TO_PAUSE = [36, 72, 108, 144, 180, 216, 252, 288, 302];
+export const FRAME_TO_PAUSE = [36, 72, 108, 144, 180, 216, 252, 288, 302]
 
-const [POS_X, POS_Y, POS_CENTER] = ['5%', '5%', '50%'];
+const [POS_X, POS_Y, POS_CENTER] = ['5%', '5%', '50%']
 
 interface Position {
-  top?: string;
-  left?: string;
-  right?: string;
-  bottom?: string;
-  transform?: string;
+  top?: string
+  left?: string
+  right?: string
+  bottom?: string
+  transform?: string
 }
 
 export const POSITIONS: Position[] = [
@@ -344,4 +344,4 @@ export const POSITIONS: Position[] = [
     top: POS_Y,
     left: POS_X
   }
-];
+]
