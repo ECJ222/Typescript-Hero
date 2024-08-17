@@ -1,21 +1,17 @@
 .lesson {
-  width: 100%;
+  width: 100vw;
+  height: 100vh;
   display: flex;
   flex-direction: column;
-  position: absolute;
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 100;
   background-color: #010101;
   border: 1px solid #1f1f1f;
   box-shadow: 0px 10px 20px rgba(0, 0, 0, 0.19), 0px 6px 6px rgba(0, 0, 0, 0.23);
   border-radius: 5px;
   padding: 1rem;
-
-  @media screen and (max-width: 768px) {
-    z-index: 100;
-  }
-
-  @media screen and (min-width: 1024px) {
-    height: max-content;
-  }
 
   &__topic {
     font-size: 1.25rem;
@@ -34,23 +30,14 @@
     background-color: #1f1f1f;
     padding: 0.5rem;
     overflow: auto;
-
-    @media screen and (min-width: 1024px) {
-      height: initial;
-      max-height: calc(100vh - 200px);
-    }
   }
 
   &__continue-btn {
     width: 100%;
-    min-height: 25px;
+    min-height: 35px;
     background-color: #101010;
     color: #fff;
     font-weight: 600;
     margin-top: 1rem;
-
-    @media screen and (min-width: 1024px) {
-      display: none;
-    }
   }
 }

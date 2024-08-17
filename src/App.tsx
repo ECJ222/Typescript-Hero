@@ -7,6 +7,7 @@ import { Preload } from './components';
 import Header from './components/Header';
 import Intro from './components/Intro';
 import GameSystem from './GameSystem';
+import { isHTMLElement } from './utils/helpers'
 import './app.scss';
 
 gsap.registerPlugin(ScrollTrigger, ScrollToPlugin);
@@ -29,7 +30,7 @@ export default function App() {
 
   const scrollToIntroScreen = () => {
     const screenIntroEl = document.querySelector('.screen__start');
-    if (screenIntroEl instanceof HTMLElement) {
+    if (isHTMLElement(screenIntroEl!)) {
       screenIntroEl.scrollTo({ top: 0, behavior: 'smooth' });
     }
   };

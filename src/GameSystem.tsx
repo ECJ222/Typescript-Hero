@@ -6,6 +6,7 @@ import Lottie from 'lottie-react';
 import { useResize, useScroll } from './hooks';
 import { Lesson } from './components';
 import { FRAME_TO_PAUSE, FRAME_COUNT } from './utils/constants';
+import { isHTMLElement } from './utils/helpers';
 import SwipeUpAnimation from './utils/swipeup.json';
 
 interface GameSystemProps {
@@ -50,9 +51,9 @@ export default function GameSystem({ startEndAnimation, resetEndAnimation, image
   };
 
   const getImageUrl = (frame: number) => {
-    const filePath = `/assets/screens/anim${String(frame + 1).padStart(4, "0")}.png`
-    return new URL(filePath, import.meta.url).href
-  }
+    const filePath = `/assets/screens/anim${String(frame + 1).padStart(4, '0')}.png`;
+    return new URL(filePath, import.meta.url).href;
+  };
 
   const createImages = () => {
     images.current = [];
@@ -120,13 +121,6 @@ export default function GameSystem({ startEndAnimation, resetEndAnimation, image
       const futureIndex = isScrollingUp.current ? currentIndex.current + 1 : currentIndex.current - 1;
       if (FRAME_TO_PAUSE.includes(futureIndex)) {
         pauseGame();
-
-        // Auto-continue on desktop screens
-        if (width > 1024) {
-          setTimeout(() => {
-            continueGame();
-          }, 1000);
-        }
       }
     }
   };
@@ -147,20 +141,22 @@ export default function GameSystem({ startEndAnimation, resetEndAnimation, image
 
   const pauseGame = () => {
     isScrollable.current = false;
+    const screen = document.querySelector('.screen')!;
+    if (width <= 1024 && isHTMLElement(screen)) {
+      screen.style.overflow = 'hidden';
+    }
     setIsLessonOpen(true);
     observer.current?.disable();
   };
 
   const continueGame = () => {
-    if (width <= 1024) {
-      goToGame();
-      const screen = document.querySelector('.screen');
-      const lesson = document.querySelector('.lesson');
-      if (screen instanceof HTMLElement && lesson instanceof HTMLElement) {
-        screen.style.overflow = 'initial';
-        lesson.style.position = 'absolute';
-        setIsLessonOpen(false);
-      }
+    goToGame();
+    const screen = document.querySelector('.screen');
+    const lesson = document.querySelector('.lesson');
+    if (isHTMLElement(screen!) && isHTMLElement(lesson!)) {
+      screen.style.overflow = 'initial';
+      lesson.style.position = 'absolute';
+      setIsLessonOpen(false);
     }
 
     isScrollable.current = true;
@@ -213,16 +209,6 @@ export default function GameSystem({ startEndAnimation, resetEndAnimation, image
 
   const goToGame = () => {
     gsap.to(window, { scrollTo: { y: '.screen__game', offsetY: 0 } });
-  };
-
-  const handleCompletedAnimation = () => {
-    const screen = document.querySelector('.screen');
-    const lesson = document.querySelector('.lesson');
-    if (width <= 1024 && screen instanceof HTMLElement && lesson instanceof HTMLElement) {
-      screen.style.overflow = 'hidden';
-      lesson.style.position = 'fixed';
-      lesson.style.height = window.innerHeight + 'px';
-    }
   };
 
   useEffect(() => {
@@ -312,7 +298,7 @@ export default function GameSystem({ startEndAnimation, resetEndAnimation, image
       {currentIndex.current > 0 && currentIndex.current < FRAME_COUNT - 1 && !isScrolling && isScrollable.current && !isLessonOpen && (
         <Lottie className="swipe-up" animationData={SwipeUpAnimation} loop={true} />
       )}
-      {isLessonOpen && <Lesson topicIndex={currentIndex.current} onContinue={continueGame} onCompleted={handleCompletedAnimation} />}
+      {isLessonOpen && <Lesson topicIndex={currentIndex.current} onContinue={continueGame} />}
     </section>
   );
 }
