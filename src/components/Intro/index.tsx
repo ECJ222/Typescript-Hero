@@ -1,6 +1,6 @@
 import { gsap } from 'gsap'
 
-const Intro = () => {
+export const Intro = () => {
   const handleClick = () => {
     gsap.to(window, { scrollTo: '.screen__game' })
   }
@@ -17,5 +17,3 @@ const Intro = () => {
     </div>
   )
 }
-
-export default Intro

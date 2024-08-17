@@ -1,7 +1,7 @@
 import { useState, useRef } from 'react'
 import { SpeakerWaveIcon, SpeakerXMarkIcon } from '@heroicons/react/24/solid'
 
-const Header = () => {
+export const Header = () => {
   const [isPlaying, setIsPlaying] = useState(false)
   const audioElement = useRef<HTMLAudioElement | null>(null)
 
@@ -34,5 +34,3 @@ const Header = () => {
     </header>
   )
 }
-
-export default Header
